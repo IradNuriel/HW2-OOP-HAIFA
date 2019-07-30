@@ -1,3 +1,4 @@
+//Irad Nuriel, 324220458
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 #include <iostream>
@@ -13,15 +14,15 @@ class Matrix {
 private:
 	//data is the actual matrix data
 	T** data;
-	//init are functions for avoiding code duplications
-	void init(T l) {
+	//init are methods for avoiding code duplications
+	void initValuesByInteger(T l) {
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
 				this->data[i][j] = l;
 			}
 		}
 	}
-	void init(const Matrix<row, col, T>& other) {
+	void initValuesByAnotherMatrix(const Matrix<row, col, T>& other) {
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
 				this->data[i][j] = other.data[i][j];
@@ -34,40 +35,43 @@ private:
 			this->data[i] = new T[col];
 		}
 	}
-	//just min function
-	int min(int a, int b) const{
-		return (a < b) ? a : b;
-	}
-public:
-	//constructors- default, normal and copy
-	Matrix() {
-		this->initArray();
-		this->init(0);
-	}
-	Matrix(T l) {
-		this->initArray();
-		this->init(l);
-	}
-	Matrix(const Matrix<row,col,T>& other) {
-		this->initArray();
-		init(other);
-	}
-	//distructor
-	~Matrix() {
+	//method for deleting the current matrix pointers:
+	void deleteData() {
 		for (int i = 0; i < row; i++) {
 			delete[] this->data[i];
 		}
 		delete[] this->data;
 	}
-	//assignment operator
+	//just min function
+	int min(int a, int b) const{
+		return (a < b) ? a : b;
+	}
+public:
+	//constructors- default and normal
+	Matrix() {
+		this->initArray();
+		this->initValuesByInteger(0);
+	}
+	Matrix(T l) {
+		this->initArray();
+		this->initValuesByInteger(l);
+	}
+	//the big three:
+	Matrix(const Matrix<row,col,T>& other) {
+		//copy c'tor
+		this->initArray();
+		this->initValuesByAnotherMatrix(other);
+	}
+	~Matrix() {
+		//distructor
+		this->deleteData();
+	}
 	const Matrix<row, col, T>& operator=(const Matrix<row,col,T>& other) {
+		//assignment operator
 		if (this != &other) {
-			for (int i = 0; i < row; i++) {
-				delete[] (this->data[i]);
-			}
-			delete[] this->data;
+			this->deleteData();
 			this->initArray();
-			init(other);
+			this->initValuesByAnotherMatrix(other);
 		}
 		return *this;
 	}
@@ -160,7 +164,7 @@ public:
 		--(*this);
 		return other;
 	}
-	//function for getting the main diag of the matrix
+	//method for getting the main diag of the matrix
 	T* getDiag(int& number) const{
 		number = this->min(row, col);
 		T* diag = new T[number];
@@ -169,10 +173,11 @@ public:
 		}
 		return diag;
 	}
-	//function for getting the trace of the matrix
+	//method for getting the trace of the matrix
 	T trace() const{
 		int number;
 		T trace;
+		//since trace of matrix is the sum of its diagnal, we will get the diagnal then adding its elements up.
 		T* diag = getDiag(number);
 		trace = diag[0];
 		for (int i = 1; i < number; i++) {
