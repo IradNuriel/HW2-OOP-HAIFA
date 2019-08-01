@@ -1,1 +1,1 @@
-Irad Nuriel, irad9731@gmail.com, 324220458
+Irad Nuriel solution for hw2 in OOP course - haifa university.
