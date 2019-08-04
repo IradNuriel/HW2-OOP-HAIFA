@@ -50,11 +50,11 @@ public:
 	//constructors- default and normal
 	Matrix() {
 		this->initArray();
-		this->initValuesByInteger(0);
+		this->initValuesByT(0);
 	}
 	Matrix(T l) {
 		this->initArray();
-		this->initValuesByInteger(l);
+		this->initValuesByT(l);
 	}
 	//the big three:
 	Matrix(const Matrix<row,col,T>& other) {
